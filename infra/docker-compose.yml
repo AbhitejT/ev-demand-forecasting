@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: timescale/timescaledb:latest-pg16
+    container_name: evdp-postgres
+    environment:
+      POSTGRES_DB: evdp
+      POSTGRES_USER: evdp_user
+      POSTGRES_PASSWORD: evdp_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U evdp_user -d evdp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.16.2
+    container_name: evdp-mlflow
+    command: >
+      mlflow server
+      --backend-store-uri sqlite:///mlflow.db
+      --default-artifact-root /mlartifacts
+      --host 0.0.0.0
+      --port 5001
+    ports:
+      - "5001:5001"
+    volumes:
+      - ../mlruns:/mlartifacts
+
+volumes:
+  postgres_data:
