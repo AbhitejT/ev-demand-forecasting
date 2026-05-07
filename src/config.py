@@ -1,9 +1,12 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 
 ROOT = Path(__file__).resolve().parents[1]
+
+load_dotenv(ROOT / ".env")
 
 ACN_RAW_DATA_PATH = Path(os.getenv("ACN_RAW_DATA_PATH", str(ROOT / "data/raw/acn_sessions.csv")))
 CLEAN_DATA_PATH = Path(os.getenv("CLEAN_DATA_PATH", str(ROOT / "data/processed/charging_sessions_clean.csv")))

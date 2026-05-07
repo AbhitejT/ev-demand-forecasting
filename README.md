@@ -33,9 +33,15 @@ infra/          # docker-compose + sql migration
    - `pip install -e .`
 2. Start Postgres + MLflow:
    - `docker compose -f infra/docker-compose.yml up -d`
-3. Set the ACN token:
-   - `export ACN_API_TOKEN=<your_token>`
-   - optional: `export ACN_SITES=caltech,jpl`
+3. Create a `.env` file at the project root with your settings (it is gitignored):
+   ```
+   ACN_API_TOKEN=<your_token>
+   ACN_SITES=caltech,jpl
+   ACN_START=2018-01-01
+   ACN_END=2020-12-31
+   ACN_MAX_SESSIONS=12000
+   ```
+   These are loaded automatically when `src/config.py` is imported.
 
 ## Running the pipeline
 Run the whole thing at once:
